@@ -31,7 +31,7 @@ namespace Application.Services
             };
 
             await _unitOfWork.Internships.AddAsync(internship);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
         }
 
         public async Task<IEnumerable<InternshipDto>> GetAllAsync()
@@ -80,7 +80,7 @@ namespace Application.Services
             internship.IsAvailable = dto.IsAvailable;
 
             _unitOfWork.Internships.Update(internship);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
         }
 
         public async Task DeleteAsync(Guid id)
@@ -91,7 +91,7 @@ namespace Application.Services
                 throw new Exception("Internship Not Found");
 
             _unitOfWork.Internships.Delete(internship);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
         }
 
     }

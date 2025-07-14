@@ -7,13 +7,9 @@ using Domain.Entities;
 
 namespace Domain.Interfaces
 {
-    public interface IInternshipRepository
+    public interface IInternshipRepository : IGenericRepository<Internship>
     {
-        Task<Internship?> GetByIdAsync(Guid id);
-        Task<IEnumerable<Internship>> GetAllAsync();
         Task<IEnumerable<Internship>> GetByCompanyIdAsync(Guid companyId);
-        Task AddAsync(Internship internship);
-        void Update(Internship internship);
-        void Delete(Internship internship);
+        Task<IEnumerable<Internship>> SearchByTitleAsync(string keyword);
     }
 }

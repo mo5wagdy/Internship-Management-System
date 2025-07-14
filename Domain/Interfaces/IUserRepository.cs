@@ -7,13 +7,8 @@ using Domain.Entities;
 
 namespace Domain.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IGenericRepository<User>
     {
-        Task<User?> GetByIdAsync(Guid Id);
         Task<User?> GetByEmailAsync(string email);
-        Task<IEnumerable<User>> GetAllAsync();
-        Task AddAsync(User user);
-        void Update(User user);
-        void Delete(User user);
     }
 }

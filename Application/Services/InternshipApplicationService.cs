@@ -28,7 +28,7 @@ namespace Application.Services
                 Status = InternshipApplicationStatus.Pending
             };
             await _unitOfWork.InternshipApplications.AddAsync(application);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
         }
 
         public async Task<IEnumerable<InternshipApplicationDto>> GetAllAsync()
@@ -81,7 +81,7 @@ namespace Application.Services
             application.Status = Enum.Parse<InternshipApplicationStatus>(dto.Status, true);
 
             _unitOfWork.InternshipApplications.Update(application);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
         }
     }
 }

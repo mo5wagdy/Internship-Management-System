@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Interfaces;
+using Application.Interfaces;
 using Infrastructure.Persistence;
 
 namespace Infrastructure.Repositories

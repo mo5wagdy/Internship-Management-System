@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Interfaces;
 
-namespace Domain.Interfaces
+namespace Application.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IAsyncDisposable
     {
         IUserRepository Users { get; }
         IInternshipRepository Internships { get; }
         IInternshipApplicationRepository InternshipApplications { get; }
-        Task<int> SaveChangesAsync();
+        Task<int> CompleteAsync();
     }
 }

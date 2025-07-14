@@ -32,7 +32,7 @@ namespace Application.Services
             };
 
             await _unitOfWork.Users.AddAsync(user);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync();
         }
 
         public async Task<UserDto> LoginAsync(UserLoginDto dto)
