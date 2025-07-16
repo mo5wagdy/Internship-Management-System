@@ -7,7 +7,7 @@ using Application.DTOs.Internships;
 
 namespace Application.Interfaces
 {
-    public interface IIntershipService
+    public interface IInternshipService
     {
         Task CreateAsync(CreateInternshipDto dto);
         Task<IEnumerable<InternshipDto>> GetAllAsync();

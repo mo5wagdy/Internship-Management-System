@@ -10,7 +10,7 @@ using Domain.Interfaces;
 
 namespace Application.Services
 {
-    public class InternshipService : IIntershipService
+    public class InternshipService : IInternshipService
     {
         private readonly IUnitOfWork _unitOfWork;
         public InternshipService(IUnitOfWork unitOfWork)

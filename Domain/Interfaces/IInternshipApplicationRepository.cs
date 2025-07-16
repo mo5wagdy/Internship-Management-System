@@ -7,7 +7,7 @@ using Domain.Entities;
 
 namespace Domain.Interfaces
 {
-    public interface IInternshipApplicationRepository
+    public interface IInternshipApplicationRepository : IGenericRepository<InternshipApplication>
     {
         Task<IEnumerable<InternshipApplication>> GetByStudentIdAsync(Guid studentId);
         Task<IEnumerable<InternshipApplication>> GetByInternshipIdAsync(Guid internshipId);
