@@ -11,5 +11,7 @@ namespace Application.Interfaces
         Task RegisterAsync(UserRegisterDto dto);
         Task<UserDto> LoginAsync(UserLoginDto dto);
         Task<IEnumerable<UserDto>> GetAllAsync();
+        Task<UserDto> GetByIdAsync(Guid id);
+        Task DeleteAsync(Guid id);
     }
 }

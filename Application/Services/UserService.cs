@@ -40,25 +40,28 @@ namespace Application.Services
             var user = await _unitOfWork.Users.GetByEmailAsync(dto.Email);
             if (user == null || !CheckPassword(dto.Password, user.PasswordHash))
                 throw new Exception("Invalid Email Or Password");
-            return new UserDto
-            {
-                Id = user.Id,
-                FullName = user.FullName,
-                Email = user.Email,
-                Role = user.Role.ToString()
-            };
+            return MapToDto(user);
         }
 
         public async Task<IEnumerable<UserDto>> GetAllAsync()
         {
             var users = await _unitOfWork.Users.GetAllAsync();
-            return users.Select(u => new UserDto
-            {
-                Id = u.Id,
-                FullName = u.FullName,
-                Email = u.Email,
-                Role = u.Role.ToString()
-            });
+            return users.Select(MapToDto);
+        }
+
+        public async Task<UserDto> GetByIdAsync(Guid id)
+        {
+            var user = await _unitOfWork.Users.GetByIdAsync(id);
+            if (user == null) throw new Exception("User Not Found");
+            return MapToDto(user);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var user = await _unitOfWork.Users.GetByIdAsync(id);
+            if (user == null) throw new Exception("User Not Found");
+            _unitOfWork.Users.Delete(user);
+            await _unitOfWork.CompleteAsync();
         }
 
         private string HashPassword(string password)
@@ -66,5 +69,13 @@ namespace Application.Services
 
         private bool CheckPassword(string plain, string hashed)
         => HashPassword(plain) == hashed;
+
+        private UserDto MapToDto(User user) => new UserDto
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            Role = user.Role.ToString()
+        };
     }
 }
