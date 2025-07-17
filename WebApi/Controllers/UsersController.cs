@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs.Users;
+using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,10 +16,68 @@ namespace WebApi.Controllers
             _userservice = userservice;
         }
 
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(UserRegisterDto dto)
+        {
+            await _userservice.RegisterAsync(dto);
+            return Created("", new { message = "User Created Successfully" });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserLoginDto dto)
+        {
+            try
+            {
+                var token = await _userservice.LoginAsync(dto);
+                return Ok(new {token});
+            }
+
+            catch (Exception Ex)
+            {
+                return Unauthorized(new { message = Ex.Message });
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var users = await _userservice.GetAllAsync();
+            return Ok(users);
+        }
+
+        [Authorize]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var user = await _userservice.GetByIdAsync(id);
-            return Ok(user);
+            try
+            {
+
+                var user = await _userservice.GetByIdAsync(id);
+                return Ok(user);
+            }
+
+            catch (Exception Ex)
+            {
+                return NotFound(new { message = Ex.Message });
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await _userservice.DeleteAsync(id);
+                return Ok(new { message = "User Deleted Successfully"});
+            }
+            catch (Exception Ex)
+            {
+                return NotFound(new { message = Ex.Message });
+            }
         }
     }
 }

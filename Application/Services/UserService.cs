@@ -16,9 +16,11 @@ namespace Application.Services
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public UserService(IUnitOfWork unitOfWork)
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        public UserService(IUnitOfWork unitOfWork, IJwtTokenGenerator jwtTokenGenerator)
         {
             _unitOfWork = unitOfWork;
+            _jwtTokenGenerator = jwtTokenGenerator;
         }
 
         public async Task RegisterAsync(UserRegisterDto dto)
@@ -35,12 +37,12 @@ namespace Application.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        public async Task<UserDto> LoginAsync(UserLoginDto dto)
+        public async Task<string> LoginAsync(UserLoginDto dto)
         {
             var user = await _unitOfWork.Users.GetByEmailAsync(dto.Email);
             if (user == null || !CheckPassword(dto.Password, user.PasswordHash))
                 throw new Exception("Invalid Email Or Password");
-            return MapToDto(user);
+            return _jwtTokenGenerator.GenerateToken(user);
         }
 
         public async Task<IEnumerable<UserDto>> GetAllAsync()
