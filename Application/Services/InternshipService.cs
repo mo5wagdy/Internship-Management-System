@@ -50,6 +50,24 @@ namespace Application.Services
             });
         }
 
+        public async Task<InternshipDto> GetByIdAsync(Guid id)
+        {
+            var internship = await _unitOfWork.Internships.GetByIdAsync(id);
+            if (internship == null)
+                throw new Exception("Internship Not Found");
+
+            return new InternshipDto
+            {
+                Id = internship.Id,
+                Title = internship.Title,
+                Description = internship.Description,
+                StartDate = internship.StartDate,
+                EndDate = internship.EndDate,
+                IsAvailable = internship.IsAvailable,
+                CompanyId = internship.CompanyId
+            };
+        }
+
         public async Task<IEnumerable<InternshipDto>> GetByCompanyIdAsync(Guid companyId)
         {
             var internship = await _unitOfWork.Internships.GetByCompanyIdAsync(companyId);
@@ -66,13 +84,28 @@ namespace Application.Services
             });
         }
 
+        public async Task<IEnumerable<InternshipDto>> SearchByTitleAsync(string keyword)
+        {
+            var internships = await _unitOfWork.Internships.SearchByTitleAsync(keyword);
+            return internships.Select(i => new InternshipDto
+            {
+                Id = i.Id,
+                Title = i.Title,
+                Description = i.Description,
+                StartDate = i.StartDate,
+                EndDate = i.EndDate,
+                IsAvailable = i.IsAvailable,
+                CompanyId = i.CompanyId
+            });
+        }
+
         public async Task UpdateAsync(UpdateInternshipDto dto)
         {
             var internship = await _unitOfWork.Internships.GetByIdAsync(dto.Id);
 
             if (internship == null)
                 throw new Exception("Internship Not Found");
-            
+
             internship.Title = dto.Title;
             internship.Description = dto.Description;
             internship.StartDate = dto.StartDate;

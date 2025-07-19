@@ -11,7 +11,9 @@ namespace Application.Interfaces
     {
         Task CreateAsync(CreateInternshipDto dto);
         Task<IEnumerable<InternshipDto>> GetAllAsync();
+        Task<InternshipDto> GetByIdAsync(Guid id);
         Task<IEnumerable<InternshipDto>> GetByCompanyIdAsync(Guid companyId);
+        Task<IEnumerable<InternshipDto>> SearchByTitleAsync(string keyword);
         Task UpdateAsync(UpdateInternshipDto dto);
         Task DeleteAsync(Guid Id);
     }
