@@ -20,8 +20,8 @@ namespace WebApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterDto dto)
         {
-            await _userservice.RegisterAsync(dto);
-            return Created("", new { message = "User Created Successfully" });
+            var result = await _userservice.RegisterAsync(dto);
+            return Created("", result);
         }
 
         [AllowAnonymous]

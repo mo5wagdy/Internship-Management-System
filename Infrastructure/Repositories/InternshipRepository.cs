@@ -27,7 +27,7 @@ namespace Infrastructure.Repositories
         public async Task<IEnumerable<Internship>> SearchByTitleAsync(string keyword)
             => await _context.Internships
                 .AsNoTracking()
-                .Where(i => i.Title.ToLower().Contains(keyword.ToLower(), StringComparison.OrdinalIgnoreCase))
+                .Where(i => EF.Functions.Like(i.Title, $"%{keyword}%"))
                 .ToListAsync();
     }
 }

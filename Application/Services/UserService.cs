@@ -29,7 +29,7 @@ namespace Application.Services
             {
                 FullName = dto.FullName,
                 Email = dto.Email,
-                PasswordHash = dto.Password,
+                PasswordHash = HashPassword(dto.Password),
                 Role = Enum.Parse<UserRole>(dto.Role, true)
             };
 
