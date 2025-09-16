@@ -32,6 +32,9 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Apply([FromBody] CreateInternshipApplicationDto dto)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             await _applicationServices.ApplyAsync(dto);
             return Created("", new { message = "Application Submitted Successfully" });
         }
@@ -59,6 +62,9 @@ namespace WebApi.Controllers
         [HttpPut("{applictionId}/status")]
         public async Task<IActionResult> UpdateStatus([FromRoute] Guid applictionId, [FromBody] UpdateInternshipApplicationStatusDto dto)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             if (applictionId != dto.ApplicationId)
             {
                 return BadRequest(new { message = "Application Id Mismatch" });

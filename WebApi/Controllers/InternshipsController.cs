@@ -58,6 +58,9 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateInternshipDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             try
             {
                 await _internshipService.CreateAsync(dto);
@@ -73,6 +76,10 @@ namespace WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(UpdateInternshipDto dto)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
             await _internshipService.UpdateAsync(dto);
             return Ok(new { message = "Internship updated successfully" });
         }

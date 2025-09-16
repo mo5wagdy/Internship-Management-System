@@ -20,6 +20,9 @@ namespace WebApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var result = await _userservice.RegisterAsync(dto);
             return Created("", result);
         }
@@ -28,6 +31,9 @@ namespace WebApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserLoginDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             try
             {
                 var token = await _userservice.LoginAsync(dto);
