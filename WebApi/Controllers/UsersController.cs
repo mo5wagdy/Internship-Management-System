@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Extentions;
 
 namespace WebApi.Controllers
 {
@@ -58,6 +59,12 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized();
+
+            if(!User.IsInRole("Admin") && userId.Value != id)
+                return Forbid();
+
             try
             {
 
@@ -75,6 +82,12 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized();
+
+            if(!User.IsInRole("Admin") && userId.Value != id)
+                return Forbid();
+
             try
             {
                 await _userservice.DeleteAsync(id);

@@ -4,6 +4,7 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Extentions;
 
 namespace WebApi.Controllers
 {
@@ -12,10 +13,12 @@ namespace WebApi.Controllers
     public class InternshipsController : ControllerBase
     {
         private readonly IInternshipService _internshipService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public InternshipsController(IInternshipService internshipService)
+        public InternshipsController(IInternshipService internshipService, IUnitOfWork unitOfWork)
         {
             _internshipService = internshipService;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -43,6 +46,12 @@ namespace WebApi.Controllers
         [HttpGet("company/{companyId}")]
         public async Task<IActionResult> GetByCompanyId(Guid companyId)
         {
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized();
+
+            if (userId.Value != companyId && !User.IsInRole("Admin"))
+                return Forbid();
+
             var internships = await _internshipService.GetByCompanyIdAsync(companyId);
             return Ok(internships);
         }
@@ -60,6 +69,12 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized();
+
+            if (dto.CompanyId != userId.Value && !User.IsInRole("Admin"))
+                return Forbid();
 
             try
             {
@@ -79,6 +94,14 @@ namespace WebApi.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var internship = await _unitOfWork.Internships.GetByIdAsync(dto.Id);
+            if (internship == null) return NotFound(new { message = "Internship not found" });
+
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized();
+
+            if(internship.CompanyId != userId.Value && !User.IsInRole("Admin"))
+                return Forbid();
 
             await _internshipService.UpdateAsync(dto);
             return Ok(new { message = "Internship updated successfully" });
@@ -88,6 +111,15 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            var internship = await _unitOfWork.Internships.GetByIdAsync(id);
+            if (internship == null) return NotFound(new { message = "Internship not found" });
+
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized();
+
+            if (internship.CompanyId != userId.Value && !User.IsInRole("Admin"))
+                return Forbid();
+
             await _internshipService.DeleteAsync(id);
             return Ok(new { message = "Internship deleted successfully" });
         }

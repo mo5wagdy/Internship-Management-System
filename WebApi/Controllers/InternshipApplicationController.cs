@@ -4,6 +4,7 @@ using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Extentions;
 
 namespace WebApi.Controllers
 {
@@ -12,10 +13,12 @@ namespace WebApi.Controllers
     public class InternshipApplicationController : ControllerBase
     {
         private readonly IInternshipApplicationService _applicationServices;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public InternshipApplicationController(IInternshipApplicationService applicationServices)
+        public InternshipApplicationController(IInternshipApplicationService applicationServices, IUnitOfWork unitOfWork)
         {
             _applicationServices = applicationServices;
+            _unitOfWork = unitOfWork;
         }
 
         //Admin Can List Everything
@@ -35,6 +38,15 @@ namespace WebApi.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized();
+
+            if (dto.StudentId != userId.Value) return Forbid(); // Student May Only Apply Using Their Own ID
+
+            //Ensure Internship Exists
+            var internship = await _unitOfWork.Internships.GetByIdAsync(dto.InternshipId);
+            if (internship == null) return NotFound(new { message = "Internship Not Found" });
+
             await _applicationServices.ApplyAsync(dto);
             return Created("", new { message = "Application Submitted Successfully" });
         }
@@ -44,6 +56,14 @@ namespace WebApi.Controllers
         [HttpGet("internship/{internshipId}")]
         public async Task<IActionResult> GetByInternshipId([FromRoute] Guid internshipId)
         {
+            var internship = await _unitOfWork.Internships.GetByIdAsync(internshipId);
+            if (internship == null) return NotFound(new { message = "Internship Not Found" });
+
+            var userId = User.GetUserId();
+            if(userId == null) return Unauthorized();
+
+            if (!User.IsInRole("Admin") && internship.CompanyId != userId.Value) return Forbid();
+
             var applications = await _applicationServices.GetByInternshipIdAsync(internshipId);
             return Ok(applications);
         }
@@ -53,6 +73,11 @@ namespace WebApi.Controllers
         [HttpGet("student/{studentId}")]
         public async Task<IActionResult> GetByStudentId([FromRoute] Guid studentId)
         {
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized();
+
+            if (!User.IsInRole("Admin") && userId.Value != studentId) return Forbid();
+
             var applications = await _applicationServices.GetByStudentIdAsync(studentId);
             return Ok(applications);
         }
@@ -69,6 +94,18 @@ namespace WebApi.Controllers
             {
                 return BadRequest(new { message = "Application Id Mismatch" });
             }
+
+            var application = await _unitOfWork.InternshipApplications.GetByIdAsync(dto.ApplicationId);
+            if (application == null) return NotFound(new {message = "Application Not Found"});
+
+            var internship = await _unitOfWork.Internships.GetByIdAsync(application.InternshipId);
+            if (internship == null) return NotFound(new { message = "Internhip Not Found" });
+
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized();
+
+            if (!User.IsInRole("Admin") && internship.CompanyId != userId.Value) return Forbid(); 
+
             await _applicationServices.UpdateStatusAsync(dto);
             return Ok(new { message = "Application Status Updated Successfully" });
         }
