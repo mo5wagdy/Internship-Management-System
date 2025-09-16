@@ -8,8 +8,8 @@ namespace Application.Interfaces
 {
     public interface IUserService
     {
-        Task RegisterAsync(UserRegisterDto dto);
-        Task<string> LoginAsync(UserLoginDto dto);
+        Task <AuthResponseDto> RegisterAsync(UserRegisterDto dto);
+        Task<AuthResponseDto> LoginAsync(UserLoginDto dto);
         Task<IEnumerable<UserDto>> GetAllAsync();
         Task<UserDto> GetByIdAsync(Guid id);
         Task DeleteAsync(Guid id);

@@ -23,7 +23,7 @@ namespace Infrastructure.Services
             _settings = options.Value;
         }
 
-        public string GenerateToken(User user)
+        public TokenResult GenerateToken(User user)
         {
             var claims = new[]
             {
@@ -36,6 +36,8 @@ namespace Infrastructure.Services
 
             var creds = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256);
 
+            var expiry = DateTime.Now.AddMinutes(_settings.DurationInMinutes);
+
             var token = new JwtSecurityToken
                 (
                 _settings.Issuer,
@@ -45,7 +47,11 @@ namespace Infrastructure.Services
                 signingCredentials: creds
                 );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new TokenResult
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = expiry
+            };
 
         }
     }

@@ -23,7 +23,7 @@ namespace Application.Services
             _jwtTokenGenerator = jwtTokenGenerator;
         }
 
-        public async Task RegisterAsync(UserRegisterDto dto)
+        public async Task<AuthResponseDto> RegisterAsync(UserRegisterDto dto)
         {
             var user = new User
             {
@@ -35,14 +35,34 @@ namespace Application.Services
 
             await _unitOfWork.Users.AddAsync(user);
             await _unitOfWork.CompleteAsync();
+
+            var tokenresult = _jwtTokenGenerator.GenerateToken(user);
+            return new AuthResponseDto
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                Role = user.Role.ToString(),
+                Token = tokenresult.Token,
+                Expiration = tokenresult.Expiration
+            };
         }
 
-        public async Task<string> LoginAsync(UserLoginDto dto)
+        public async Task<AuthResponseDto> LoginAsync(UserLoginDto dto)
         {
             var user = await _unitOfWork.Users.GetByEmailAsync(dto.Email);
             if (user == null || !CheckPassword(dto.Password, user.PasswordHash))
                 throw new Exception("Invalid Email Or Password");
-            return _jwtTokenGenerator.GenerateToken(user);
+
+            var tokenresult = _jwtTokenGenerator.GenerateToken(user);
+
+            return new AuthResponseDto
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                Role = user.Role.ToString(),
+                Token = tokenresult.Token,
+                Expiration = tokenresult.Expiration
+            };
         }
 
         public async Task<IEnumerable<UserDto>> GetAllAsync()
