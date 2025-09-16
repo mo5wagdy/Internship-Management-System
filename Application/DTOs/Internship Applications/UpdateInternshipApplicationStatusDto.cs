@@ -9,6 +9,6 @@ namespace Application.DTOs.Applications
     public class UpdateInternshipApplicationStatusDto
     {
         public Guid ApplicationId { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } = String.Empty;
     }
 }

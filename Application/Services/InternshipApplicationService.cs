@@ -25,7 +25,8 @@ namespace Application.Services
             {
                 StudentId = dto.StudentId,
                 InternshipId = dto.InternshipId,
-                Status = InternshipApplicationStatus.Pending
+                Status = InternshipApplicationStatus.Pending,
+                CreatedAt = DateTime.UtcNow
             };
             await _unitOfWork.InternshipApplications.AddAsync(application);
             await _unitOfWork.CompleteAsync();
