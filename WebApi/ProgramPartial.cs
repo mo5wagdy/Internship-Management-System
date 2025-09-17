@@ -1,6 +1,6 @@
 ﻿namespace WebApi
 {
-    public partial class ProgramPartial
+    public partial class Program
     {
     }
 }
