@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore.InMemory;
 using Infrastructure.Persistence;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 
+// Add a using directive for the WebApi namespace if Program is defined there
+using WebApi;
+
 namespace InternshipManagement.Tests
 {
     public class TestWebApplicationFactory : WebApplicationFactory<Program>
