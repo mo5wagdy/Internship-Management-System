@@ -13,6 +13,12 @@
 	<PropertyGroup>
 		<PreserveCompilationContext>true</PreserveCompilationContext>
 	</PropertyGroup>
+	<Target Name="CopyDepsFile" AfterTargets="Build">
+		<ItemGroup>
+			<DepsFile Include="..\InternshipManagement.WebApi\bin\$(Configuration)\net8.0\*.deps.json" />
+		</ItemGroup>
+		<Copy SourceFiles="@(DepsFile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+	</Target>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.9" />
 		<PackageReference Include="Moq" Version="4.20.72" />
@@ -21,6 +27,11 @@
 		<PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
 		<PackageReference Include="coverlet.collector" Version="6.0.4" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="xunit.runner">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>
