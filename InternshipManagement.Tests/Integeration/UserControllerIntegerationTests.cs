@@ -1,20 +1,14 @@
-﻿using InternshipManagement.Tests.Integration;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace InternshipManagement.Tests.Integration
+namespace InternshipManagement.Tests.Integeration
 {
-    public class UsersControllerIntegrationTests : IClassFixture<TestWebApplicationFactory>
+    public class UsersControllerIntegrationTests(TestWebApplicationFactory factory) : IClassFixture<TestWebApplicationFactory>
     {
-        private readonly HttpClient _client;
-
-        public UsersControllerIntegrationTests(TestWebApplicationFactory factory)
-        {
-            _client = factory.CreateClient();
-        }
+        private readonly HttpClient _client = factory.CreateClient();
 
         [Fact]
         public async Task Register_And_Login_ReturnsToken()
@@ -33,7 +27,7 @@ namespace InternshipManagement.Tests.Integration
             registerResponse.EnsureSuccessStatusCode();
 
             // Act - login
-            var loginDto = new { Email = dto.Email, Password = dto.Password };
+            var loginDto = new { dto.Email, dto.Password };
             var loginContent = new StringContent(JsonConvert.SerializeObject(loginDto), Encoding.UTF8, "application/json");
             var loginResponse = await _client.PostAsync("/api/users/login", loginContent);
             loginResponse.EnsureSuccessStatusCode();
