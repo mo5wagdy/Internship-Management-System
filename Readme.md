@@ -195,6 +195,10 @@ The test factory (`TestWebApplicationFactory`) configures the API to use an InMe
 ## 📁 Entity Relationship Diagram (ERD)
 ![ERD](Screenshots/ERD.png)
 
+
+## ⭕ Live Swagger API Documentation  
+👉 [Click here to explore the API](https://app.swaggerhub.com/apis-docs/muhammed5wagdy/Internship_Management_System/1.0.0 )
+
 ---
 
 ## ⚙️ System Screenshots
@@ -217,7 +221,7 @@ The test factory (`TestWebApplicationFactory`) configures the API to use an InMe
 ### 👥 Get Users (Postman)
 ![Get Users](Screenshots/Postman-Get%20Users.png)
 
-### 📈 Company Creating Internship (Postman)
+### 🏢 Company Creating Internship (Postman)
 ![Company Creating Internship](Screenshots/Postman-Company%20Creating%20Internship.png)
 
 ### 🧑🏻‍🦱 Student Applying For Internship (Postman)
