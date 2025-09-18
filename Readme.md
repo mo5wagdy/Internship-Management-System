@@ -44,6 +44,7 @@ The Internship Management System is a modern web-based platform designed to stre
 ├── WebApi/                      # API controllers, startup/configuration
 ├── InternshipManagement.Tests/  # Unit & integration tests
 ├── LICENSE.txt                  # License (GNU GPL v3)
+├── Screenshots                  # Everything You'll Love to See
 ├── Readme.md                    # Project documentation
 ```
 
@@ -189,10 +190,38 @@ The test factory (`TestWebApplicationFactory`) configures the API to use an InMe
 
 ---
 
-## 7. 🎥 Screenshots / Demos
+## 7. 🎥 Screenshots
 
-> Add screenshots or demo GIFs here to showcase the UI or API usage.
+## 📁 Entity Relationship Diagram (ERD)
+![ERD](Screenshots/ERD.png)
 
+---
+
+## ⚙️ System Screenshots
+
+### 🏗️ Project Structure
+![Project Structure](Screenshots/Project%20Structure.png)
+
+### 📝 Swagger API Documentation (1)
+![Swagger Api Documentation 1](Screenshots/Swagger%20Api%20Documentaion%201.png)
+
+### 📝 Swagger API Documentation (2)
+![Swagger Api Documentation 2](Screenshots/Swagger%20Api%20Documentaion%202.png)
+
+### 👶🏻 User Register (Postman)
+![User Register](Screenshots/Postman-User%20Register.png)
+
+### 👴🏻 User Login (Postman)
+![User Login](Screenshots/Postman-User%20Login.png)
+
+### 👥 Get Users (Postman)
+![Get Users](Screenshots/Postman-Get%20Users.png)
+
+### 📈 Company Creating Internship (Postman)
+![Company Creating Internship](Screenshots/Postman-Company%20Creating%20Internship.png)
+
+### 🧑🏻‍🦱 Student Applying For Internship (Postman)
+![Student Applying](Screenshots/Postman-Student%20Applying%20For%20Internship.png)
 ---
 
 ## 8. 🚀 Improvements & Future Enhancements
